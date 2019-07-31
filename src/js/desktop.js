@@ -44,7 +44,6 @@
     objParam.record[CONFIG_USER].value[member.length] = {};
     objParam.record[CONFIG_USER].value[member.length].code = {};
     objParam.record[CONFIG_USER].value[member.length].code = loginuser.code;
-
     // Refresh the page
     kintone.api('/k/v1/record', 'PUT', objParam, function(resp) {
       // Refresh the page on success
@@ -55,17 +54,22 @@
   // Add a Record Details event
   kintone.events.on('app.record.detail.show', function(event) {
     member = event.record[CONFIG_USER].value;
-
+    
     // Get the element of the Blank space field
     var se = kintone.app.record.getSpaceElement(CONFIG_SPACE);
 
     // Create a button
     var btn = document.createElement('button');
+    var user = kintone.getLoginUser();
     btn.appendChild(document.createTextNode(' ' + CONFIG_LABEL + ' '));
     btn.id = 'btnAddMine';
     btn.name = 'btnAddMine';
     se.appendChild(btn);
     btn.style.marginTop = '30px';
+     if(member.length !== 0){  // if user selection field filled, disable button
+       btn.disabled = 'true';
+     }
     btn.addEventListener('click', addMemberMine);
+
   });
 })(kintone.$PLUGIN_ID);
